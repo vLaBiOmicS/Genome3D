@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genome3D - Convert Genomes to 3D Models</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #controls {
+            background: white;
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            width: 320px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        #controls h1 {
+            font-size: 20px;
+            margin: 0 0 10px;
+        }
+        #controls p {
+            font-size: 12px;
+            color: #555;
+            margin: 5px 0 15px;
+        }
+        #controls label {
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+        #controls input, #controls button {
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 6px;
+            font-size: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        #controls button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #controls button:hover {
+            background-color: #0056b3;
+        }
+        #controls button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #preview {
+            font-size: 12px;
+            color: #333;
+            margin: 5px 0;
+        }
+        #footer {
+            font-size: 10px;
+            color: #888;
+            text-align: center;
+            margin-top: auto;
+            padding: 5px 0 0;
+        }
+        #visualization {
+            flex-grow: 1;
+            position: relative;
+            background: #e8ebf0;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <h1>Genome3D</h1>
+        <p>
+            Convert viral, mitochondrial, and bacterial genome sequences into STL files for 3D printing.
+        </p>
+        <label for="cubeSize">Cube Size:</label>
+        <input type="number" id="cubeSize" value="1" step="0.1">
+        <label for="gap">Gap Between Cubes:</label>
+        <input type="number" id="gap" value="0.2" step="0.1">
+        <label for="baseHeightA">Height for Base 'A':</label>
+        <input type="number" id="baseHeightA" value="3" step="0.1">
+        <label for="baseHeightT">Height for Base 'T':</label>
+        <input type="number" id="baseHeightT" value="4" step="0.1">
+        <label for="baseHeightC">Height for Base 'C':</label>
+        <input type="number" id="baseHeightC" value="5" step="0.1">
+        <label for="baseHeightG">Height for Base 'G':</label>
+        <input type="number" id="baseHeightG" value="6" step="0.1">
+        <label for="fileInput">Upload Genome File:</label>
+        <input type="file" id="fileInput" accept=".fasta,.txt">
+        <div id="preview">No file loaded.</div>
+        <button id="generateButton" disabled>Generate 3D Model</button>
+        <button id="exportButton" disabled>Export to STL</button>
+        <div id="footer">Developed by the Laboratory of Bioinformatics and Omics Sciences (LaBiOmicS).</div>
+    </div>
+    <div id="visualization"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.155.0/three.min.js"></script>
+    <script>
+        let scene, camera, renderer, genomeGroup, sequence = '';
+
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const generateButton = document.getElementById('generateButton');
+        const exportButton = document.getElementById('exportButton');
+        const visualization = document.getElementById('visualization');
+
+        // Handle file upload
+        fileInput.addEventListener('change', function () {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const result = parseFasta(e.target.result);
+                    if (result) {
+                        sequence = result;
+                        preview.textContent = `File loaded: ${file.name} - ${sequence.length} bases found.`;
+                        generateButton.disabled = false;
+                    } else {
+                        preview.textContent = 'Invalid file. Ensure your file only contains A, T, C, G, or N.';
+                        generateButton.disabled = true;
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        generateButton.addEventListener('click', function () {
+            if (!sequence) {
+                alert('No valid sequence found. Please upload a valid FASTA file.');
+                return;
+            }
+            const config = getConfig();
+            create3DVisualization(sequence, config);
+            exportButton.disabled = false;
+        });
+
+        exportButton.addEventListener('click', exportToSTL);
+
+        // Parse FASTA file
+        function parseFasta(fastaText) {
+            const lines = fastaText.split('\n');
+            let seq = '';
+            for (let line of lines) {
+                line = line.trim();
+                if (line.startsWith('>')) continue; // Skip headers
+                if (/^[ATCGN]*$/i.test(line)) { // Accept valid bases and N
+                    seq += line.toUpperCase();
+                } else {
+                    return null; // Invalid line found
+                }
+            }
+            return seq.length > 0 ? seq : null;
+        }
+
+        function getConfig() {
+            return {
+                cubeSize: parseFloat(document.getElementById('cubeSize').value),
+                gap: parseFloat(document.getElementById('gap').value),
+                baseHeights: {
+                    'A': parseFloat(document.getElementById('baseHeightA').value),
+                    'T': parseFloat(document.getElementById('baseHeightT').value),
+                    'C': parseFloat(document.getElementById('baseHeightC').value),
+                    'G': parseFloat(document.getElementById('baseHeightG').value),
+                    'N': 2 // Default height for N
+                }
+            };
+        }
+
+        function create3DVisualization(sequence, config) {
+            if (scene) {
+                renderer.dispose();
+                visualization.innerHTML = '';
+            }
+
+            scene = new THREE.Scene();
+            const aspect = visualization.clientWidth / visualization.clientHeight;
+            camera = new THREE.OrthographicCamera(-50 * aspect, 50 * aspect, 50, -50, 1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(visualization.clientWidth, visualization.clientHeight);
+            visualization.appendChild(renderer.domElement);
+
+            const light = new THREE.AmbientLight(0xffffff);
+            scene.add(light);
+
+            const { cubeSize, gap, baseHeights } = config;
+            const sideLength = Math.ceil(Math.sqrt(sequence.length));
+            const totalWidth = (sideLength * cubeSize) + ((sideLength - 1) * gap);
+            let posX = -totalWidth / 2, posY = totalWidth / 2;
+
+            genomeGroup = new THREE.Group();
+
+            let currentIndex = 0;
+            for (let y = 0; y < sideLength; y++) {
+                for (let x = 0; x < sideLength; x++) {
+                    if (currentIndex >= sequence.length) break;
+                    const base = sequence[currentIndex];
+                    const colorMap = { 
+                        'A': 0xff0000, 
+                        'T': 0x00ff00, 
+                        'C': 0x0000ff, 
+                        'G': 0xffff00, 
+                        'N': 0x999999 
+                    };
+                    const color = colorMap[base] || 0x999999;
+                    const height = baseHeights[base] || cubeSize;
+
+                    const geometry = new THREE.BoxGeometry(cubeSize, height, cubeSize);
+                    const material = new THREE.MeshStandardMaterial({ color });
+                    const cube = new THREE.Mesh(geometry, material);
+
+                    cube.position.set(posX, height / 2, posY);
+                    genomeGroup.add(cube);
+
+                    posX += cubeSize + gap;
+                    currentIndex++;
+                }
+                posX = -totalWidth / 2;
+                posY -= cubeSize + gap;
+            }
+
+            scene.add(genomeGroup);
+            camera.position.set(0, 50, 0);
+            camera.lookAt(0, 0, 0);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        function exportToSTL() {
+            const exporter = {
+                parse: function (group) {
+                    const stl = [];
+                    stl.push('solid genome');
+                    group.children.forEach(mesh => {
+                        const geometry = mesh.geometry;
+                        const position = geometry.attributes.position;
+                        const vector = new THREE.Vector3();
+
+                        for (let i = 0; i < position.count; i += 3) {
+                            stl.push('facet normal 0 0 0');
+                            stl.push('outer loop');
+
+                            for (let j = 0; j < 3; j++) {
+                                vector.fromBufferAttribute(position, i + j).applyMatrix4(mesh.matrixWorld);
+                                stl.push(`vertex ${vector.x} ${vector.y} ${vector.z}`);
+                            }
+
+                            stl.push('endloop');
+                            stl.push('endfacet');
+                        }
+                    });
+                    stl.push('endsolid genome');
+                    return stl.join('\n');
+                }
+            };
+
+            const stlString = exporter.parse(genomeGroup);
+
+            const blob = new Blob([stlString], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'genome_model.stl';
+            link.click();
+        }
+    </script>
+</body>
+</html>
