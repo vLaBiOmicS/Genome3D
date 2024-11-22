@@ -55,3 +55,21 @@ ATCGNNNATCG
 - **CSS3:** Ensures responsive and user-friendly design.
 - **JavaScript:** Handles the core functionality of file processing and rendering.
 - **Three.js:** Powers the 3D rendering and visualization of genome models.
+
+## Getting Started
+Clone the repository:
+
+```bash
+Copiar código
+git clone https://github.com/yourusername/genome3d.git
+```
+
+
+Navigate to the project directory:
+bash
+Copiar código
+cd genome3d
+Open the index.html file in your browser:
+bash
+Copiar código
+open index.html
