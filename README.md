@@ -76,9 +76,15 @@ $ chrome index.html
 
 ## Example Workflow
 
-Input FASTA File:
+### Input FASTA File:
 
 ```plaintext
 >Example Genome
 ATCGNNNATCG
 ```
+
+### 3D Model Parameters:
+
+- **Cube Size:** 1.0
+- **Gap Between Cubes:** 0.2
+- **Base Heights:** A: 3, T: 4, C: 5, G: 6, N: 2
