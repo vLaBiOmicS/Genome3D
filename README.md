@@ -2,7 +2,7 @@
 
 **Genome3D** is a web-based application designed to convert viral, mitochondrial, and bacterial genome sequences into 3D STL files for 3D printing. This tool allows users to visualize genomic information in a unique and tangible way, making it ideal for educational, scientific, and artistic purposes.
 
-# Applicability of Genome3D: Inclusion, Biotechnology, and Biomedical Engineering
+## Applicability of Genome3D: Inclusion, Biotechnology, and Biomedical Engineering
 
 **Genome3D** is an innovative tool that transforms genomic data into tangible 3D models, enabling users to explore and understand nucleotide sequences through interactive visualizations and physical models. Beyond its accessibility features, the tool opens new pathways for education, research, and applications in biotechnology and biomedical engineering.
 
