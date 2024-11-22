@@ -2,7 +2,7 @@
 
 **Genome3D** is a web-based application designed to convert viral, mitochondrial, and bacterial genome sequences into 3D STL files for 3D printing. This tool allows users to visualize genomic information in a unique and tangible way, making it ideal for educational, scientific, and artistic purposes.
 
-## Applicability of Genome3D: Inclusion, Biotechnology, and Biomedical Engineering
+## Applicability of Genome3D
 
 **Genome3D** is an innovative tool that transforms genomic data into tangible 3D models, enabling users to explore and understand nucleotide sequences through interactive visualizations and physical models. Beyond its accessibility features, the tool opens new pathways for education, research, and applications in biotechnology and biomedical engineering.
 
@@ -21,13 +21,15 @@
 ### Key Applications in Biotechnology:
 
 **1. Genome Annotation:**
-- Genome3D can aid in annotating viral, bacterial, or mitochondrial genomes by identifying structural patterns or conserved sequences through tactile and visual analysis.
-Synthetic Biology:
+- **Genome3D** can aid in annotating viral, bacterial, or mitochondrial genomes by identifying structural patterns or conserved sequences through tactile and visual analysis.
 
-By visualizing nucleotide sequences in a physical format, researchers can better design and test synthetic DNA constructs, improving the accuracy and efficiency of genetic engineering projects.
-Drug Development:
+**2. Synthetic Biology:**
+- By visualizing nucleotide sequences in a physical format, researchers can better design and test synthetic DNA constructs, improving the accuracy and efficiency of genetic engineering projects.
 
-Genome3D models can help researchers map genomic variations linked to drug resistance, such as in antimicrobial resistance studies, providing a deeper understanding of genetic factors affecting treatment outcomes.
+**3. Drug Development:**
+- **Genome3D** models can help researchers map genomic variations linked to drug resistance, such as in antimicrobial resistance studies, providing a deeper understanding of genetic factors affecting treatment outcomes.
+
+
 
 ## Features
 
