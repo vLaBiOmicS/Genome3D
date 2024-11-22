@@ -88,3 +88,9 @@ ATCGNNNATCG
 - **Cube Size:** 1.0
 - **Gap Between Cubes:** 0.2
 - **Base Heights:** A: 3, T: 4, C: 5, G: 6, N: 2
+
+### Result:
+
+- A 3D genome representation where each nucleotide is visualized as a cube with customizable height and spacing.
+- The ambiguous base N is represented as a gray cube.
+
