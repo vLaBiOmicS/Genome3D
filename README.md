@@ -50,3 +50,8 @@ ATCGNNNATCG
   - **Cube Size**: G: Height for Guanine bases.
   - **Cube Size**: N: Height for ambiguous or unknown bases.
 
+## Technologies Used
+- **HTML5:** Provides the structure for the interface.
+- **CSS3:** Ensures responsive and user-friendly design.
+- **JavaScript:** Handles the core functionality of file processing and rendering.
+- **Three.js:** Powers the 3D rendering and visualization of genome models.
