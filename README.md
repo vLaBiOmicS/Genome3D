@@ -94,3 +94,16 @@ ATCGNNNATCG
 - A 3D genome representation where each nucleotide is visualized as a cube with customizable height and spacing.
 - The ambiguous base N is represented as a gray cube.
 
+## Screenshots
+
+The Genome3D application interface.
+3D genome representation rendered in the browser.
+
+## Contributions
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for more details.
+
+## Acknowledgments
+Developed by the Laboratory of Bioinformatics and Omics Science (LaBiOmicS).
