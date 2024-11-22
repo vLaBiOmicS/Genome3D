@@ -124,11 +124,14 @@ ATCGNNNATCG
 
 ## Screenshots
 
-![Genome3D Example](genome3d.png)
-The Genome3D application interface.
+
+### The Genome3D application interface:
 
 ![Genome3D Example](genome3d.png)
-3D genome representation rendered in the browser.
+
+### 3D genome representation rendered in the browser:
+
+![Genome3D Example](modelo.png)
 
 ## Contributions
 Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
