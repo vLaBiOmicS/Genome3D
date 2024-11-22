@@ -73,3 +73,12 @@ Open the index.html file in your browser:
 ```bash
 $ chrome index.html
 ```
+
+## Example Workflow
+
+Input FASTA File:
+
+```plaintext
+>Example Genome
+ATCGNNNATCG
+```
