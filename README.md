@@ -60,16 +60,16 @@ ATCGNNNATCG
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/genome3d.git
+$ git clone https://github.com/yourusername/genome3d.git
 ```
 
 Navigate to the project directory:
 ```bash
-cd genome3d
+$ cd genome3d
 ```
 
 Open the index.html file in your browser:
 
 ```bash
-open index.html
+$ chrome index.html
 ```
