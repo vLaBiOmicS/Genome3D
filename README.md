@@ -37,3 +37,15 @@ Genome3D supports the following file formats:
 ```plaintext
 >Example Genome
 ATCGNNNATCG
+
+## Configurable Parameters
+
+- **Cube Size: Controls the size of the base cubes representing each nucleotide.
+- **Gap Between Cubes: Defines the spacing between each nucleotide cube.
+- **Base Heights:
+  - **Cube Size**: A: Height for Adenine bases.
+  - **Cube Size**: T: Height for Thymine bases.
+  - **Cube Size**: C: Height for Cytosine bases.
+  - **Cube Size**: G: Height for Guanine bases.
+  - **Cube Size**: N: Height for ambiguous or unknown bases.
+
