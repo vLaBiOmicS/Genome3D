@@ -94,7 +94,7 @@
         <label for="cubeSize">Cube Size:</label>
         <input type="number" id="cubeSize" value="1" step="0.1">
         <label for="gap">Gap Between Cubes:</label>
-        <input type="number" id="gap" value="0.2" step="0.1">
+        <input type="number" id="gap" value="0" step="0.1">
         <label for="baseHeightA">Height for Base 'A':</label>
         <input type="number" id="baseHeightA" value="3" step="0.1">
         <label for="baseHeightT">Height for Base 'T':</label>
@@ -121,7 +121,6 @@
         const exportButton = document.getElementById('exportButton');
         const visualization = document.getElementById('visualization');
 
-        // Handle file upload
         fileInput.addEventListener('change', function () {
             const file = fileInput.files[0];
             if (file) {
@@ -153,17 +152,16 @@
 
         exportButton.addEventListener('click', exportToSTL);
 
-        // Parse FASTA file
         function parseFasta(fastaText) {
             const lines = fastaText.split('\n');
             let seq = '';
             for (let line of lines) {
                 line = line.trim();
-                if (line.startsWith('>')) continue; // Skip headers
-                if (/^[ATCGN]*$/i.test(line)) { // Accept valid bases and N
+                if (line.startsWith('>')) continue;
+                if (/^[ATCGN]*$/i.test(line)) {
                     seq += line.toUpperCase();
                 } else {
-                    return null; // Invalid line found
+                    return null;
                 }
             }
             return seq.length > 0 ? seq : null;
@@ -178,7 +176,7 @@
                     'T': parseFloat(document.getElementById('baseHeightT').value),
                     'C': parseFloat(document.getElementById('baseHeightC').value),
                     'G': parseFloat(document.getElementById('baseHeightG').value),
-                    'N': 2 // Default height for N
+                    'N': 2
                 }
             };
         }
@@ -228,11 +226,12 @@
                     cube.position.set(posX, height / 2, posY);
                     genomeGroup.add(cube);
 
-                    posX += cubeSize + gap;
+                    posX += gap === 0 ? cubeSize : (cubeSize + gap);
                     currentIndex++;
                 }
                 posX = -totalWidth / 2;
-                posY -= cubeSize + gap;
+                posY -= gap === 0 ?
+                 posY -= gap === 0 ? cubeSize : (cubeSize + gap);
             }
 
             scene.add(genomeGroup);
