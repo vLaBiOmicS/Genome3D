@@ -130,7 +130,7 @@
                     const result = parseFasta(e.target.result);
                     if (result) {
                         sequence = result;
-                        preview.textContent = File loaded: ${file.name} - ${sequence.length} bases found.;
+                        preview.textContent = `File loaded: ${file.name} - ${sequence.length} bases found.`;
                         generateButton.disabled = false;
                     } else {
                         preview.textContent = 'Invalid file. Ensure your file only contains A, T, C, G, or N.';
@@ -262,7 +262,7 @@
 
                             for (let j = 0; j < 3; j++) {
                                 vector.fromBufferAttribute(position, i + j).applyMatrix4(mesh.matrixWorld);
-                                stl.push(vertex ${vector.x} ${vector.y} ${vector.z});
+                                stl.push(`vertex ${vector.x} ${vector.y} ${vector.z}`);
                             }
 
                             stl.push('endloop');
