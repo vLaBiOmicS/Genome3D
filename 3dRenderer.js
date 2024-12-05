@@ -1,5 +1,7 @@
-// Função para criar a visualização 3D
-export function create3DVisualization(sequence, config, scene, camera, renderer, visualization) {
+import * as THREE from 'https://cdn.skypack.dev/three@0.155.0';
+
+export function create3DVisualization(sequence, config) {
+    let scene, camera, renderer, genomeGroup;
     if (scene) {
         renderer.dispose();
         visualization.innerHTML = '';
@@ -20,9 +22,9 @@ export function create3DVisualization(sequence, config, scene, camera, renderer,
     const totalWidth = (sideLength * cubeSize) + ((sideLength - 1) * gap);
     let posX = -totalWidth / 2, posY = totalWidth / 2;
 
-    const genomeGroup = new THREE.Group();
-    let currentIndex = 0;
+    genomeGroup = new THREE.Group();
 
+    let currentIndex = 0;
     for (let y = 0; y < sideLength; y++) {
         for (let x = 0; x < sideLength; x++) {
             if (currentIndex >= sequence.length) break;
@@ -38,21 +40,17 @@ export function create3DVisualization(sequence, config, scene, camera, renderer,
             const height = baseHeights[base] || cubeSize;
 
             const geometry = new THREE.BoxGeometry(cubeSize, height, cubeSize);
-            const material = new THREE.MeshStandardMaterial({ color });
+            const material = new THREE.MeshBasicMaterial({ color: color });
             const cube = new THREE.Mesh(geometry, material);
-
-            cube.position.set(posX, height / 2, posY);
+            cube.position.set(posX + (x * (cubeSize + gap)), posY - (y * (cubeSize + gap)), 0);
             genomeGroup.add(cube);
-
-            posX += cubeSize + gap;
             currentIndex++;
         }
-        posX = -totalWidth / 2;
-        posY -= cubeSize + gap;
     }
 
     scene.add(genomeGroup);
-    camera.position.set(0, 50, 0);
+
+    camera.position.set(0, 0, 200);
     camera.lookAt(0, 0, 0);
 
     function animate() {
@@ -61,4 +59,15 @@ export function create3DVisualization(sequence, config, scene, camera, renderer,
     }
 
     animate();
+}
+
+export function exportToSTL() {
+    const stlExporter = new THREE.STLExporter();
+    const stlString = stlExporter.parse(genomeGroup);
+    const blob = new Blob([stlString], { type: 'application/sla' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'genome3d_model.stl';
+    link.click();
 }
